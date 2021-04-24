@@ -1,6 +1,8 @@
 package re;
 
-import fa.nfa.NFA;
+import fa.nfa.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 // Our proposed Grammar
@@ -17,10 +19,25 @@ public class RE implements REInterface {
 
     private String regexString;
     private NFA nfa;
+    private String previousState;
+    private String currentState;
+    private String finalState; // all states which should be a final state should map to this state with an e transition
+    private int stateNameCount;
 
     public RE(String regEx) {
         this.regexString = regEx;
+        // set up NFA
         this.nfa = new NFA();
+        Set<Character> alphabet = new LinkedHashSet<Character>();
+        alphabet.add('a');
+        alphabet.add('b');
+        alphabet.add('e');
+        this.nfa.addAbc(alphabet);
+        previousState = null;
+        stateNameCount = 0;
+        nfa.addStartState(nextStateName());
+        currentState = nfa.getStartState().getName();
+        finalState = "final";
     }
 
     @Override
@@ -29,16 +46,20 @@ public class RE implements REInterface {
 
         // this method will be our parser
 
-        // set up NFA
-
-        // parse the regex
-
-        // as we parse we need to know the current state
-
-        // as we do, add appropriate items to NFA: states and transitions
 
 
-        return null;
+        // parse the regex - TODO: change to walk through entire grammar
+        while (more()) {
+            previousState = currentState;
+            RE character = character();
+            currentState = nextStateName();
+            nfa.addState(currentState);
+            nfa.addTransition(previousState, character.toString().charAt(0), currentState);
+        }
+        nfa.addFinalState(finalState);
+        nfa.addTransition(currentState, 'e', finalState);
+
+        return nfa;
     }
 
     private char peek() {
@@ -78,6 +99,16 @@ public class RE implements REInterface {
     }
 
     private RE character() {
-        char c = peek();
+        String c = String.valueOf(peek());
+        eat(peek());
+        return new RE(c);
+    }
+
+    private String nextStateName() {
+        return Integer.toString(stateNameCount++);
+    }
+
+    public String toString() {
+        return regexString;
     }
 }
