@@ -1,7 +1,9 @@
-(a|b)|bb
+(a*|b)|bb
 a
 b
 bb
+e
+a
 aa
 abab
 aaaaa

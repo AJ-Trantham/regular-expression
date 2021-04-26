@@ -84,13 +84,21 @@ public class RE implements REInterface {
     private RE regex () {
         //  (a | b) | b
         String splitState = currentState;
+        // make buffer states to prevent epsilon transitions from travelling back to shared split states
+        String bufferStateRight = nextStateName();
+        String bufferStateLeft = nextStateName();
+        nfa.addState(bufferStateLeft);
+        nfa.addState(bufferStateRight);
+        nfa.addTransition(splitState, 'e', bufferStateLeft);
+        nfa.addTransition(splitState, 'e', bufferStateRight);
+        currentState = bufferStateLeft;
         RE term = term();
         if (more() && peek() == '|') {
             eat('|');
             String mergeState = nextStateName();
             nfa.addState(mergeState);
             nfa.addTransition(currentState, 'e', mergeState);
-            currentState = splitState;
+            currentState = bufferStateRight;
             term = regex();
             nfa.addTransition(currentState,'e',mergeState);
             currentState = mergeState;
@@ -115,7 +123,7 @@ public class RE implements REInterface {
             String beginingOfRepitition = ground.startOfRegex.equals("") ? previousState : ground.startOfRegex;
             nfa.addTransition(endOfRepetition, 'e', beginingOfRepitition); // either the previous state or a whole regex ()
             nfa.addTransition(beginingOfRepitition, 'e', endOfRepetition);
-            if (more()) { // this should be here?
+            if (more() && peek() != '|' && peek() != '*' && peek() != ')') {
                 ground = factor();
             }
         }
