@@ -112,12 +112,11 @@ public class RE implements REInterface {
         // problem here don't want
         if (more() && peek() == '*') { // changed from while but we should only ever look for one star here and two stars doesn't make sense
             eat('*');
-            String beginingOfRepitition = startOfRegex.equals("") ? previousState : startOfRegex;
+            String beginingOfRepitition = ground.startOfRegex.equals("") ? previousState : ground.startOfRegex;
             nfa.addTransition(endOfRepetition, 'e', beginingOfRepitition); // either the previous state or a whole regex ()
             nfa.addTransition(beginingOfRepitition, 'e', endOfRepetition);
             if (more()) { // this should be here?
                 ground = factor();
-                //nfa.addTransition(endOfRepetition, 'e',ground.nfa.getStartState().getName());
             }
         }
 
@@ -137,8 +136,9 @@ public class RE implements REInterface {
         switch(peek()) {
             case '(': {
                 eat('(');
-                startOfRegex = currentState;
+                String theFollowingRegexBeginsOnThisState = currentState;
                 RE regex = regex();
+                regex.startOfRegex = theFollowingRegexBeginsOnThisState;
                 eat(')');
                 return regex;
             }
