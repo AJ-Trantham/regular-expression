@@ -1,0 +1,7 @@
+(aa(bb)aa)
+aabbaa
+aaaaaa
+bbbbbb
+a
+b
+ababba

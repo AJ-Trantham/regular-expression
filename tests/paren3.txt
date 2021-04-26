@@ -1,0 +1,6 @@
+(aa)b((a))
+aaba
+abab
+bbbb
+aaaa
+a

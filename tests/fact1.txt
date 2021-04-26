@@ -1,0 +1,8 @@
+a*
+e
+a
+aa
+aaa
+b
+ab
+abaaaa

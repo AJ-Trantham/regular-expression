@@ -1,0 +1,7 @@
+(a|b)|bb
+a
+b
+bb
+aa
+abab
+aaaaa

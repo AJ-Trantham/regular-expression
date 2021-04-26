@@ -1,0 +1,11 @@
+(ab)*a*
+e
+ab
+a
+aba
+ababa
+ababaaaaa
+aaaaaaaaaaaaaaaaaaaaaaa
+bbbbbbbbb
+b
+bababa
